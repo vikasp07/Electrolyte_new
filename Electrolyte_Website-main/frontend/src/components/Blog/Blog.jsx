@@ -27,10 +27,28 @@ const BlogList = () => {
       setError("");
       try {
         const API_BASE = process.env.REACT_APP_API_BASE_URL || "https://electrolyte-website.onrender.com/api";
-        const res = await fetch(`${API_BASE}/blogs`);
+        console.log("Making API call to:", `${API_BASE}/blogs`);
+        const res = await fetch(`${API_BASE}/blogs`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        });
         if (!res.ok) {
-          throw new Error(`HTTP ${res.status}`);
+          console.error("API response not OK:", res.status, res.statusText);
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         }
+        
+        // Check if response is JSON
+        const contentType = res.headers.get("content-type");
+        console.log("Response content-type:", contentType);
+        if (!contentType || !contentType.includes("application/json")) {
+          const responseText = await res.text();
+          console.error("Non-JSON response received:", responseText.substring(0, 200));
+          throw new Error("Response is not JSON");
+        }
+        
         const data = await res.json();
         setBlogs(Array.isArray(data) ? data : []);
       } catch (e) {
@@ -131,19 +149,53 @@ const BlogPost = () => {
     const load = async () => {
       try {
         const API_BASE = process.env.REACT_APP_API_BASE_URL || "https://electrolyte-website.onrender.com/api";
-        const res = await fetch(`${API_BASE}/blogs/${encodeURIComponent(slug)}`);
+        console.log("Making API call to:", `${API_BASE}/blogs/${encodeURIComponent(slug)}`);
+        const res = await fetch(`${API_BASE}/blogs/${encodeURIComponent(slug)}`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        });
         if (res.status === 404) {
           setBlog(null);
         } else if (!res.ok) {
-          throw new Error(`HTTP ${res.status}`);
+          console.error("Blog API response not OK:", res.status, res.statusText);
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         } else {
+          // Check if response is JSON
+          const contentType = res.headers.get("content-type");
+          console.log("Blog response content-type:", contentType);
+          if (!contentType || !contentType.includes("application/json")) {
+            const responseText = await res.text();
+            console.error("Non-JSON blog response received:", responseText.substring(0, 200));
+            throw new Error("Response is not JSON");
+          }
           const data = await res.json();
           setBlog(data);
         }
-        const listRes = await fetch(`${API_BASE}/blogs`);
+        
+        const listRes = await fetch(`${API_BASE}/blogs`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        });
         if (!listRes.ok) {
-          throw new Error(`HTTP ${listRes.status}`);
+          console.error("Blog list API response not OK:", listRes.status, listRes.statusText);
+          throw new Error(`HTTP ${listRes.status}: ${listRes.statusText}`);
         }
+        
+        // Check if list response is JSON
+        const listContentType = listRes.headers.get("content-type");
+        console.log("Blog list response content-type:", listContentType);
+        if (!listContentType || !listContentType.includes("application/json")) {
+          const responseText = await listRes.text();
+          console.error("Non-JSON blog list response received:", responseText.substring(0, 200));
+          throw new Error("List response is not JSON");
+        }
+        
         const listData = await listRes.json();
         setAllBlogs(Array.isArray(listData) ? listData : []);
       } catch (e) {
