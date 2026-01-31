@@ -29,6 +29,15 @@ const resolveImageUrl = (url) => {
   return `${API_ORIGIN}${url}`;
 };
 
+// ✅ ENSURE API BASE ALWAYS ENDS WITH /api
+const getApiBase = () => {
+  const base =
+    process.env.REACT_APP_API_BASE_URL ||
+    "https://electrolyte-website.onrender.com/api";
+
+  return base.endsWith("/api") ? base : `${base}/api`;
+};
+
 /* ================= BLOG LIST ================= */
 
 const BlogList = () => {
@@ -43,9 +52,8 @@ const BlogList = () => {
       setLoading(true);
       setError("");
       try {
-        const API_BASE =
-          process.env.REACT_APP_API_BASE_URL ||
-          "https://electrolyte-website.onrender.com/api";
+        const API_BASE = getApiBase();
+        console.log("Blog list API:", `${API_BASE}/blogs`);
 
         const res = await fetch(`${API_BASE}/blogs`, {
           headers: { Accept: "application/json" },
@@ -55,6 +63,8 @@ const BlogList = () => {
 
         const contentType = res.headers.get("content-type");
         if (!contentType || !contentType.includes("application/json")) {
+          const text = await res.text();
+          console.error("Non-JSON response:", text.slice(0, 200));
           throw new Error("Response is not JSON");
         }
 
@@ -194,9 +204,8 @@ const BlogPost = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const API_BASE =
-          process.env.REACT_APP_API_BASE_URL ||
-          "https://electrolyte-website.onrender.com/api";
+        const API_BASE = getApiBase();
+        console.log("Blog post API:", `${API_BASE}/blogs/${slug}`);
 
         const res = await fetch(
           `${API_BASE}/blogs/${encodeURIComponent(slug)}`,
