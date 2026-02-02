@@ -652,6 +652,7 @@
   line-height: 1.8;
   color: var(--text-body);
   margin-bottom: 18px;
+  text-align: justify;
 }
 
 .capabilities-title {

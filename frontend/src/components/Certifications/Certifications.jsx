@@ -7,7 +7,7 @@ const Certifications = () => {
       id: 1,
       title: "ISO 9001:2015",
       subtitle: "Quality Management Systems",
-      image: "/images/Certifications/ISO 9001 2015 certificate_page-0001.jpg"
+      image: "/images/Certifications/iso-9001-2015.jpg"
     },
     {
       id: 2,

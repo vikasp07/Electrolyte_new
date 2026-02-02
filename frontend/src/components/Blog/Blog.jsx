@@ -19,8 +19,16 @@ const formatDate = (iso) => {
   }
 };
 
-// Backend origin (for images)
-const API_ORIGIN = "https://electrolyte-website.onrender.com";
+// Get current origin for images (dynamic based on environment)
+const getImageOrigin = () => {
+  // In production, use the production API origin
+  if (process.env.NODE_ENV === 'production') {
+    return "https://electrolyte-website.onrender.com";
+  }
+  
+  // In development, use the current page origin
+  return window.location.origin;
+};
 
 // Get API base URL
 const getApiBase = () => {
@@ -42,7 +50,7 @@ const getApiBase = () => {
 const resolveImageUrl = (url) => {
   if (!url) return "";
   if (url.startsWith("http")) return url;
-  return `${API_ORIGIN}${url}`;
+  return `${getImageOrigin()}${url}`;
 };
 
 /* ================= BLOG LIST ================= */
