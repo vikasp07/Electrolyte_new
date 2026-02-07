@@ -12,22 +12,30 @@ export default function PcbRepairForm() {
         {/* Left Form */}
         <form className="pcb-form">
           <label>
-            Company Name <span>*</span>
+            <span className="label-text">
+              Company Name <span>*</span>
+            </span>
             <input type="text" />
           </label>
 
           <label>
-            Contact Person <span>*</span>
+            <span className="label-text">
+              Contact Person <span>*</span>
+            </span>
             <input type="text" />
           </label>
 
           <label>
-            Email <span>*</span>
+            <span className="label-text">
+              Email <span>*</span>
+            </span>
             <input type="email" />
           </label>
 
           <label>
-            Phone <span>*</span>
+            <span className="label-text">
+              Phone <span>*</span>
+            </span>
             <input type="text" />
           </label>
 

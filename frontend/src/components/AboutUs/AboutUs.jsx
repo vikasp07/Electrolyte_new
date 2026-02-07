@@ -101,7 +101,6 @@ const COMPANY = {
 
 const AboutUs = () => {
   const [scrollY, setScrollY] = useState(0);
-  const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -110,15 +109,6 @@ const AboutUs = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const copyToClipboard = async (text) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      alert("Copied: " + text);
-    } catch (err) {
-      alert("Copy failed.");
-    }
-  };
 
   const chatHref = `https://wa.me/${COMPANY.whatsapp.replace(/\D/g, "")}`;
 
@@ -131,31 +121,6 @@ const AboutUs = () => {
 
       {/* Mission, Vision, Values Section */}
       <MissionVisionValues />
-
-      {/* Values Section */}
-      <section
-        className="values-section"
-        style={{
-          backgroundImage: 'url("/images/AboutUs/core-values.jpg")',
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundAttachment: "fixed",
-        }}
-      >
-        <div className="section-overlay">
-          <div className="container">
-            <h2 className="section-title">Our Values</h2>
-            <div className="values-grid">
-              {COMPANY.values.map((value, idx) => (
-                <div key={idx} className="value-item">
-                  <h4>{value.title}</h4>
-                  <p>{value.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Why Section */}
       <section
@@ -182,151 +147,43 @@ const AboutUs = () => {
         </div>
       </section>
 
-      {/* Process Section */}
-      <section
-        className="process-section"
-        style={{
-          backgroundImage: 'url("/images/AboutUs/process.jpg")',
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundAttachment: "fixed",
-        }}
-      >
-        <div className="section-overlay">
-          <div className="container">
-            <h2 className="section-title">Our Process</h2>
-            <p className="section-subtitle">From Discovery to Support</p>
-            <div className="process-grid">
-              {COMPANY.process.map((step, idx) => (
-                <div key={idx} className="process-step">
-                  <div className="step-number">{step.num}</div>
-                  <h4>{step.title}</h4>
-                  <p>{step.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
+      {/* Get In Touch Section */}
       <section className="contact-section">
         <div className="container">
           <h2 className="section-title">Get In Touch</h2>
-          <div className="contact-tabs">
-            {["Contact", "Location", "Social"].map((tab, idx) => (
-              <button
-                key={idx}
-                className={`tab-btn ${activeTab === idx ? "active" : ""}`}
-                onClick={() => setActiveTab(idx)}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
-
-          <div className="contact-content">
-            {activeTab === 0 && (
-              <div className="tab-pane">
-                <div className="contact-grid">
-                  <div className="contact-box">
-                    <h4>Phone</h4>
-                    <a href={`tel:${COMPANY.phonePrimary}`}>
-                      {COMPANY.phonePrimary}
-                    </a>
-                    <button
-                      className="small-btn"
-                      onClick={() => copyToClipboard(COMPANY.phonePrimary)}
-                    >
-                      Copy
-                    </button>
-                  </div>
-                  <div className="contact-box">
-                    <h4>Email</h4>
-                    <a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a>
-                    <button
-                      className="small-btn"
-                      onClick={() => copyToClipboard(COMPANY.email)}
-                    >
-                      Copy
-                    </button>
-                  </div>
-                  <div className="contact-box">
-                    <h4>WhatsApp</h4>
-                    <a
-                      href={chatHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {COMPANY.whatsapp}
-                    </a>
-                    <button
-                      className="small-btn"
-                      onClick={() => window.open(chatHref, "_blank")}
-                    >
-                      Chat
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 1 && (
-              <div className="tab-pane">
-                <div className="location-content">
-                  <div className="address-box">
-                    <h4>Address</h4>
-                    {COMPANY.addressLines.map((line, idx) => (
-                      <p key={idx}>{line}</p>
-                    ))}
-                  </div>
-                  <div className="map-box">
-                    <iframe
-                      title="Company Location"
-                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3771.0841638599!2d73.0218!3d19.0176!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7e9c3c3c3c3c3%3A0x3c3c3c3c3c3c3c3c!2sNavi%20Mumbai!5e0!3m2!1sen!2sin!4v1234567890"
-                      width="100%"
-                      height="300"
-                      style={{ border: "none", borderRadius: "8px" }}
-                      allowFullScreen=""
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                    ></iframe>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 2 && (
-              <div className="tab-pane">
-                <div className="social-grid">
-                  <a
-                    href={chatHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="social-card"
-                  >
-                    <i className="ri-whatsapp-line"></i>
-                    <span>WhatsApp</span>
-                  </a>
-                  <a href={`mailto:${COMPANY.email}`} className="social-card">
-                    <i className="ri-mail-line"></i>
-                    <span>Email</span>
-                  </a>
-                  <a
-                    href="https://www.linkedin.com/company/electrolyte-solutions/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="social-card"
-                  >
-                    <i className="ri-linkedin-fill"></i>
-                    <span>LinkedIn</span>
-                  </a>
-                </div>
-              </div>
-            )}
+          
+          <div className="social-icons-container">
+            <a
+              href="https://www.instagram.com/electrolytesolutions/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="social-icon-link"
+              aria-label="Instagram"
+            >
+              <i className="ri-instagram-line"></i>
+            </a>
+            <a
+              href="https://www.linkedin.com/company/electrolyte-solutions/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="social-icon-link"
+              aria-label="LinkedIn"
+            >
+              <i className="ri-linkedin-fill"></i>
+            </a>
+            <a
+              href={chatHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="social-icon-link"
+              aria-label="WhatsApp"
+            >
+              <i className="ri-whatsapp-line"></i>
+            </a>
           </div>
         </div>
       </section>
+
     </div>
   );
 };

@@ -44,8 +44,15 @@
   color: var(--text-body);
 }
 
+.pcb-form label .label-text {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .pcb-form label span {
   color: var(--primary);
+  display: inline;
 }
 
 .pcb-form input,

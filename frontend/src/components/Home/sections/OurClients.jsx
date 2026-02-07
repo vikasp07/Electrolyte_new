@@ -109,6 +109,11 @@ const OurClients = () => {
       className="bt_bb_section our-clients-section"
     >
       <div className="our-clients-content">
+        {/* Section Header */}
+        <div className="our-clients-header">
+          <h3 className="our-clients-title">Our Clients</h3>
+        </div>
+
         {/* Client Slider */}
         <div className="our-clients-slider-wrapper">
           <div className="our-clients-slider" ref={sliderRef}>

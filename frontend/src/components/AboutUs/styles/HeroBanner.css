@@ -29,9 +29,14 @@
 .hero-banner-content {
   text-align: center;
   color: var(--text-heading);
-  max-width: 900px;
+  max-width: 1200px;
+  width: 100%;
   padding: 0 20px;
   animation: fadeInUp 0.8s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .hero-banner-title {
@@ -43,6 +48,8 @@
   color: var(--text-heading);
   line-height: 1.2;
   animation: fadeInUp 0.8s ease 0.2s both;
+  text-align: center;
+  width: 100%;
 }
 
 .hero-banner-subtitle {
@@ -52,6 +59,8 @@
   color: var(--text-muted);
   letter-spacing: 1px;
   animation: fadeInUp 0.8s ease 0.3s both;
+  text-align: center;
+  width: 100%;
 }
 
 /* Parallax effect */

@@ -121,6 +121,8 @@ const Clients = () => {
             </section>
 
             <section className="clients-list" id="clients-list">
+              <h2>Our Clients</h2>
+
               <div className="clients-grid">
                 {clientData.map((v, i) => (
                   <article
