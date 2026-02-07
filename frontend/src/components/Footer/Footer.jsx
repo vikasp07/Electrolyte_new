@@ -5,12 +5,7 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="footer-container">
-        {/* Column 1 */}
-        <div className="footer-col">
-          <ul></ul>
-        </div>
-
-        {/* Column 2 */}
+        {/* Column 1 - Services */}
         <div className="footer-col">
           <h4>Services</h4>
           <ul>
@@ -29,7 +24,7 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Column 3 */}
+        {/* Column 2 - Industries */}
         <div className="footer-col">
           <h4>Industries</h4>
           <ul>
@@ -48,7 +43,7 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Column 4 */}
+        {/* Column 3 - Company */}
         <div className="footer-col">
           <h4>Company</h4>
           <ul>

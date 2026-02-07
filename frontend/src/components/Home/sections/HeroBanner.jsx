@@ -3,42 +3,23 @@ import "../styles/HeroBanner.css";
 
 const HeroBanner = ({ scrollY }) => {
   const [rotatingWordIndex, setRotatingWordIndex] = useState(0);
-  const [displayText, setDisplayText] = useState("");
-  const [isDeleting, setIsDeleting] = useState(false);
 
-  // Move rotatingWords to useMemo to fix exhaustive-deps warning
+  // Three rotating words with 4.08 seconds display time each
   const rotatingWords = useMemo(() => [
-    "LED Video Walls",
-    "Industrial Electronics",
+    "Video Walls",
+    "Consumer Electronics",
     "Device Refurbishment",
   ], []);
 
   useEffect(() => {
-    const currentWord = rotatingWords[rotatingWordIndex];
-    const typingSpeed = isDeleting ? 50 : 100;
-    const delayBetweenWords = 2000;
+    const displayDuration = 4000; // 4.08 seconds display time
 
-    const timer = setTimeout(() => {
-      if (!isDeleting) {
-        if (displayText.length < currentWord.length) {
-          setDisplayText(currentWord.substring(0, displayText.length + 1));
-        } else {
-          setIsDeleting(true);
-          setTimeout(() => {
-            setRotatingWordIndex((prev) => (prev + 1) % rotatingWords.length);
-          }, delayBetweenWords);
-        }
-      } else {
-        if (displayText.length > 0) {
-          setDisplayText(displayText.substring(0, displayText.length - 1));
-        } else {
-          setIsDeleting(false);
-        }
-      }
-    }, isDeleting || displayText.length === 0 ? typingSpeed : displayText.length === currentWord.length ? delayBetweenWords : typingSpeed);
+    const timer = setInterval(() => {
+      setRotatingWordIndex((prev) => (prev + 1) % rotatingWords.length);
+    }, displayDuration);
 
-    return () => clearTimeout(timer);
-  }, [displayText, isDeleting, rotatingWordIndex, rotatingWords]);
+    return () => clearInterval(timer);
+  }, [rotatingWords]);
 
   const handleParallax = () => {
     return {
@@ -70,64 +51,41 @@ const HeroBanner = ({ scrollY }) => {
       <div className="hero-banner-content">
         <div className="hero-banner-container">
           <div className="hero-banner-main">
-            {/* Separator */}
-            <div className="separator" />
-
-            {/* Main Title */}
+            {/* Main Headline */}
             <h1 className="hero-banner-title animate-in">
+              ISO & ZED Certified L3/L4 Repair Service for OEMs
             </h1>
 
             {/* Rotating Words Section */}
             <div className="hero-banner-rotating-section">
               <h2 className="hero-banner-subtitle">
-                <span>Specializing in</span>
-                <div className="rotating-words-wrapper">
-                  <span className="rotating-word active">{displayText}</span>
-                  <span className="typing-cursor">|</span>
-                </div>
+                <span className="subtitle-label">Specializing in</span>
+                <span key={rotatingWordIndex} className="rotating-word fade-in">
+                  {rotatingWords[rotatingWordIndex]}
+                </span>
               </h2>
             </div>
 
-            {/* Separator */}
-            <div className="separator" />
-
-            {/* Subheadline */}
-            <h3 className="hero-banner-description animate-in">
-              ISO & ZED certified L3/L4 repair service for OEMs
-            </h3>
-
-            {/* Separator */}
-            <div className="separator" />
-
             {/* CTA Button */}
-            <a href="/services" className="btn-primary animate-in">
-              <span className="btn-text">Request Technical Discussion</span>
+            <a href="/contact" className="btn-primary animate-in">
+              <span className="btn-text">REQUEST TECHNICAL DISCUSSION</span>
               <i className="ri-arrow-right-line"></i>
             </a>
-
-            {/* Separator */}
-            <div className="separator" />
           </div>
 
           {/* Statistics/Counters Section */}
           <div className="hero-banner-stats">
             <StatCounter
-              icon="+"
-              label="PCB Refurbishment Capacity / Month"
+              label="PCB REFURBISHMENT CAPACITY / MONTH"
               value="15,000+"
-              dataIcon="remixiconsbusiness"
             />
             <StatCounter
-              icon="%"
-              label="Average Recovery Rate"
+              label="AVERAGE RECOVERY RATE"
               value="85%"
-              dataIcon="remixiconsuser"
             />
             <StatCounter
-              icon="%"
-              label="Cost saving Vs new PCB purchase"
+              label="COST SAVING VS NEW PCB PURCHASE"
               value="75%"
-              dataIcon="remixiconsfinance"
             />
           </div>
         </div>
@@ -137,15 +95,11 @@ const HeroBanner = ({ scrollY }) => {
 };
 
 // Statistics Counter Component
-const StatCounter = ({ icon, label, value, dataIcon }) => {
+const StatCounter = ({ label, value }) => {
   return (
     <div className="stat-counter animate-in">
-      <div className="stat-counter-icon">
-        <i className={`ri-${dataIcon}`} style={{ fontSize: "2.5em" }}></i>
-      </div>
-      <div className="separator separator-small" />
       <div className="stat-counter-value">{value}</div>
-      <div className="separator separator-small" />
+      <div className="stat-counter-divider"></div>
       <h4 className="stat-counter-label">{label}</h4>
     </div>
   );
