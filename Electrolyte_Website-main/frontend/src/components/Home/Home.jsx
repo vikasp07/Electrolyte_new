@@ -3,7 +3,7 @@ import "./Home.css";
 import HeroBanner from "./sections/HeroBanner";
 import OemTrust from "./sections/OemTrust";
 import UseCasesSlider from "./sections/UseCasesSlider";
-import OurServices from "./sections/OurServices";
+import ExploreServices from "./sections/ExploreServices";
 import OurClients from "./sections/OurClients";
 
 const Home = () => {
@@ -29,8 +29,8 @@ const Home = () => {
             {/* Use Cases Section */}
             <UseCasesSlider />
 
-            {/* Our Services Section */}
-            <OurServices />
+            {/* Explore Services Section */}
+            <ExploreServices />
 
             {/* Our Clients Section */}
             <OurClients />

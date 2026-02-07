@@ -5,66 +5,63 @@ import "../styles/UseCasesSlider.css";
 const UseCasesSlider = () => {
   const sliderRef = useRef(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [blogPosts, setBlogPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Blog posts data - keeping the same UI structure
-  const blogPosts = useMemo(() => [
-    {
-      id: 1,
-      title:
-        "The Future of Cybersecurity: Data Diodes and Zero Trust Architecture",
-      description:
-        "Explore how data diodes are becoming essential components in modern zero trust security frameworks, providing unidirectional data transfer for critical infrastructure...",
-      image:
-        "/images/Home/Secure-File-Transfer-and-Syslog-Replication-Using-Owl-Data-Diodes.jpg",
-      link: "/blog/1",
-      tagline: "Cybersecurity",
-    },
-    {
-      id: 2,
-      title:
-        "Securing Industrial Control Systems: Best Practices for OT Security",
-      description:
-        "Learn about the critical importance of securing operational technology environments and the best practices for protecting industrial control systems from cyber threats...",
-      image:
-        "/images/Home/OSI-PI-Historian-Replication-Using-OWL-Data-Diodes.jpg",
-      link: "/blog/2",
-      tagline: "Industrial Security",
-    },
-    {
-      id: 3,
-      title: "OPC UA Security: Protecting Industrial Communications",
-      description:
-        "Discover how to secure OPC UA communications in industrial environments using hardware-based security solutions and best practices...",
-      image:
-        "/images/Home/Secure-OPC-Data-Replication-Using-Owl-Data-Diodes.jpg",
-      link: "/blog/3",
-      tagline: "Industrial Protocols",
-    },
-    {
-      id: 4,
-      title:
-        "Database Replication Security: Ensuring Data Integrity Across Networks",
-      description:
-        "Learn how to implement secure database replication across network boundaries while maintaining data integrity and protecting sensitive information...",
-      image: "/images/Home/Database-Replication-Using-Data-Diodes.jpg",
-      link: "/blog/4",
-      tagline: "Data Security",
-    },
-    {
-      id: 5,
-      title:
-        "CCTV Network Security: Protecting Surveillance Systems from Cyber Threats",
-      description:
-        "Explore the critical importance of securing CCTV networks and learn how to protect surveillance systems from cyber attacks while maintaining operational effectiveness...",
-      image: "/images/Home/Securing-Critical-CCTV-Networks-and-Enterprise.jpg",
-      link: "/blog/5",
-      tagline: "Physical Security",
-    },
-  ], []);
+  // Fetch real blogs from API
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      setLoading(true);
+      try {
+        const API_BASE = process.env.REACT_APP_API_BASE_URL || "https://electrolyte-website.onrender.com/api";
+        const res = await fetch(`${API_BASE}/blogs`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+        
+        const contentType = res.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new Error("Response is not JSON");
+        }
+        
+        const data = await res.json();
+        const blogs = Array.isArray(data) ? data : [];
+        
+        // Take only the latest 5 blogs
+        const latestBlogs = blogs.slice(0, 5).map(blog => ({
+          id: blog._id || blog.id,
+          title: blog.title,
+          description: blog.excerpt,
+          image: (blog.featuredImage && blog.featuredImage.url) || blog.image || "/images/Home/Industry-based-Use-Cases.jpg",
+          link: `/blog/${blog.slug}`,
+          tagline: blog.category || "Blog",
+        }));
+        
+        setBlogPosts(latestBlogs);
+      } catch (e) {
+        console.error("Failed to load blogs:", e);
+        // Set empty array if fetch fails
+        setBlogPosts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchBlogs();
+  }, []);
 
   // Auto-play functionality
   useEffect(() => {
+    if (blogPosts.length === 0) return;
+    
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % blogPosts.length);
     }, 6000); // autoplay stays 6 seconds
@@ -93,92 +90,94 @@ const UseCasesSlider = () => {
           </Link>
         </div>
 
-        <div className="usecases-slider-wrapper">
-          {/* Left Arrow Navigation */}
-          <button
-            className="usecase-nav-btn usecase-nav-prev"
-            onClick={() =>
-              setCurrentSlide(
-                (prev) => (prev - 1 + blogPosts.length) % blogPosts.length
-              )
-            }
-            aria-label="Previous slide"
-          >
-            <img src="/images/Home/left_array.png" alt="Previous" />
-          </button>
+        {loading ? (
+          <div className="usecases-loading">
+            <p>Loading blogs...</p>
+          </div>
+        ) : blogPosts.length === 0 ? (
+          <div className="usecases-no-blogs">
+            <p>No blogs available yet. Check back soon!</p>
+          </div>
+        ) : (
+          <div className="usecases-slider-wrapper">
+            {/* Left Arrow Navigation */}
+            <button
+              className="usecase-nav-btn usecase-nav-prev"
+              onClick={() =>
+                setCurrentSlide(
+                  (prev) => (prev - 1 + blogPosts.length) % blogPosts.length
+                )
+              }
+              aria-label="Previous slide"
+            >
+              <img src="/images/Home/left_array.png" alt="Previous" />
+            </button>
 
-          {/* Right Arrow Navigation */}
-          <button
-            className="usecase-nav-btn usecase-nav-next"
-            onClick={() =>
-              setCurrentSlide((prev) => (prev + 1) % blogPosts.length)
-            }
-            aria-label="Next slide"
-          >
-            <img src="/images/Home/right_array.png" alt="Next" />
-          </button>
+            {/* Right Arrow Navigation */}
+            <button
+              className="usecase-nav-btn usecase-nav-next"
+              onClick={() =>
+                setCurrentSlide((prev) => (prev + 1) % blogPosts.length)
+              }
+              aria-label="Next slide"
+            >
+              <img src="/images/Home/right_array.png" alt="Next" />
+            </button>
 
-          <div className="usecases-slider" ref={sliderRef}>
-            {blogPosts.map((post, index) => (
-              <div
-                key={post.id}
-                className={`usecase-slide ${
-                  index === currentSlide ? "active" : ""
-                }`}
-                style={{
-                  opacity: index === currentSlide ? 1 : 0,
-                  transform:
-                    index === currentSlide
-                      ? "translateX(0)"
-                      : "translateX(100%)",
-                  transition: "all 2s ease-in-out", // UPDATED TO 2 SECONDS
-                  position: index === currentSlide ? "relative" : "absolute",
-                }}
-              >
-                <div className="usecase-slide-content">
-                  <div
-                    className="usecase-image"
-                    onClick={() => handleBlogClick(post.link)}
-                  >
-                    <img src={post.image} alt={post.title} loading="lazy" />
-                  </div>
-                  <div className="usecase-info animate-bottom">
-                    {post.tagline && (
-                      <p className="usecase-tagline">{post.tagline}</p>
-                    )}
-                    <h2 className="usecase-title">{post.title}</h2>
-                    <p className="usecase-description">{post.description}</p>
-                    <Link to={post.link} className="btn-usecase">
-                      Read More <i className="ri-arrow-right-long-line"></i>
-                    </Link>
+            <div className="usecases-slider" ref={sliderRef}>
+              {blogPosts.map((post, index) => (
+                <div
+                  key={post.id}
+                  className={`usecase-slide ${
+                    index === currentSlide ? "active" : ""
+                  }`}
+                  style={{
+                    opacity: index === currentSlide ? 1 : 0,
+                    transform:
+                      index === currentSlide
+                        ? "translateX(0)"
+                        : "translateX(100%)",
+                    transition: "all 2s ease-in-out", // UPDATED TO 2 SECONDS
+                    position: index === currentSlide ? "relative" : "absolute",
+                  }}
+                >
+                  <div className="usecase-slide-content">
+                    <div
+                      className="usecase-image"
+                      onClick={() => handleBlogClick(post.link)}
+                    >
+                      <img src={post.image} alt={post.title} loading="lazy" />
+                    </div>
+                    <div className="usecase-info animate-bottom">
+                      {post.tagline && (
+                        <p className="usecase-tagline">{post.tagline}</p>
+                      )}
+                      <h2 className="usecase-title">{post.title}</h2>
+                      <p className="usecase-description">{post.description}</p>
+                      <Link to={post.link} className="btn-usecase">
+                        Read More <i className="ri-arrow-right-long-line"></i>
+                      </Link>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
 
-          <div className="bottom-arrow">
-            <a
-              href="#our-services-section"
-              className="arrow-link"
-              aria-label="Scroll to services"
-            >
-              <img
-                src="/images/Home/bottom_array.png"
-                alt="Scroll down"
-                loading="lazy"
-              />
-            </a>
+            <div className="bottom-arrow">
+              <a
+                href="#explore-services-section"
+                className="arrow-link"
+                aria-label="Scroll to services"
+              >
+                <img
+                  src="/images/Home/bottom_array.png"
+                  alt="Scroll down"
+                  loading="lazy"
+                />
+              </a>
+            </div>
           </div>
-        </div>
-      </div>
-
-      <div className="section-bottom-coverage">
-        <img
-          src="/images/Home/bottom_black_02-1.png"
-          alt="wave"
-          loading="lazy"
-        />
+        )}
       </div>
     </section>
   );

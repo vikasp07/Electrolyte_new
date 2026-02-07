@@ -1,6 +1,7 @@
 /* Latest Blogs Section */
 .latest-blogs-section {
   background: #111827;
+  background-image: none;
   padding: 80px 0;
   position: relative;
 }

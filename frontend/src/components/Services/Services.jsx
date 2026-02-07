@@ -1,13 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "./Services.css";
 import Industries from "./Industries";
 import QualitySystems from "./QualitySystems";
 
 const Services = () => {
   const [scrollY, setScrollY] = useState(0);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [autoPlay, setAutoPlay] = useState(true);
-  const autoPlayRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -76,42 +73,6 @@ const Services = () => {
       delay: "0.6s",
     },
   ];
-
-  // Auto-play effect for carousel
-  useEffect(() => {
-    if (autoPlay) {
-      autoPlayRef.current = setInterval(() => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % services.length);
-      }, 4000); // Rotate every 4 seconds
-    }
-
-    return () => {
-      if (autoPlayRef.current) clearInterval(autoPlayRef.current);
-    };
-  }, [autoPlay, services.length]);
-
-  const handleCarouselPrev = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? services.length - 1 : prevIndex - 1
-    );
-    setAutoPlay(false);
-    setTimeout(() => setAutoPlay(true), 8000);
-  };
-
-  const handleCarouselNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % services.length);
-    setAutoPlay(false);
-    setTimeout(() => setAutoPlay(true), 8000);
-  };
-
-  const getVisibleServices = () => {
-    const visibleCount = 3;
-    const services_list = [];
-    for (let i = 0; i < visibleCount; i++) {
-      services_list.push(services[(currentIndex + i) % services.length]);
-    }
-    return services_list;
-  };
 
   const handleParallax = () => {
     return {
@@ -220,77 +181,6 @@ const Services = () => {
             {/* Quality Systems Section */}
             <QualitySystems />
 
-            {/* Services Carousel Section */}
-            <section
-              id="services-carousel-section"
-              className="bt_bb_section services-carousel-section"
-            >
-              <div className="container">
-                <div className="carousel-section-header">
-                  <h2 className="carousel-section-title">
-                    Explore Our Services
-                  </h2>
-                </div>
-
-                {/* Circular Carousel */}
-                <div className="circular-carousel-wrapper">
-                  {/* Navigation Buttons */}
-                  <button
-                    className="carousel-nav-btn carousel-nav-prev"
-                    onClick={handleCarouselPrev}
-                    aria-label="Previous services"
-                  >
-                    <i className="ri-arrow-left-s-line"></i>
-                  </button>
-
-                  {/* Carousel Container */}
-                  <div className="circular-carousel-container">
-                    <div className="carousel-track">
-                      {getVisibleServices().map((service, index) => (
-                        <div
-                          key={service.id}
-                          className={`carousel-item ${
-                            index === 1 ? "active" : ""
-                          } ${index === 0 ? "prev" : ""} ${
-                            index === 2 ? "next" : ""
-                          }`}
-                        >
-                          <ServiceCarouselCard service={service} />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Navigation Buttons */}
-                  <button
-                    className="carousel-nav-btn carousel-nav-next"
-                    onClick={handleCarouselNext}
-                    aria-label="Next services"
-                  >
-                    <i className="ri-arrow-right-s-line"></i>
-                  </button>
-                </div>
-
-                {/* Carousel Indicators */}
-                <div className="carousel-indicators">
-                  {services.map((_, index) => (
-                    <button
-                      key={index}
-                      className={`indicator ${
-                        index === currentIndex ? "active" : ""
-                      }`}
-                      onClick={() => {
-                        setCurrentIndex(index);
-                        setAutoPlay(false);
-                        setTimeout(() => setAutoPlay(true), 8000);
-                      }}
-                      aria-label={`Go to service ${index + 1}`}
-                    />
-                  ))}
-                </div>
-              </div>
-            </section>
-
             {/* Services Grid Section */}
             <section
               id="services-grid-section"
@@ -331,27 +221,6 @@ const ServiceCard = ({ service }) => {
       <div className="service-card-content">
         <h3 className="service-card-title">{service.title}</h3>
         <p className="service-card-description">{service.description}</p>
-      </div>
-    </div>
-  );
-};
-
-// Service Carousel Card Component
-const ServiceCarouselCard = ({ service }) => {
-  return (
-    <div className="carousel-service-card">
-      <div className="carousel-service-image-wrapper">
-        <img
-          src={service.image}
-          alt={service.title}
-          loading="lazy"
-          className="carousel-service-image"
-        />
-        <div className="carousel-service-overlay" />
-      </div>
-      <div className="carousel-service-content">
-        <h3 className="carousel-service-title">{service.title}</h3>
-        <p className="carousel-service-description">{service.description}</p>
       </div>
     </div>
   );

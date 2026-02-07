@@ -5,9 +5,25 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="footer-container">
-        {/* Column 1 */}
-        <div className="footer-col">
-          <ul></ul>
+        {/* Column 1 - Contact Info */}
+        <div className="footer-col footer-contact">
+          <h4>Contact Us</h4>
+          <ul>
+            <li className="footer-contact-item">
+              <i className="ri-building-line"></i>
+              <span>Electrolyte Solutions</span>
+            </li>
+            <li className="footer-contact-item">
+              <i className="ri-mail-line"></i>
+              <a href="mailto:info@electrolytesolutions.in">
+                info@electrolytesolutions.in
+              </a>
+            </li>
+            <li className="footer-contact-item">
+              <i className="ri-map-pin-line"></i>
+              <span>Mumbai, Maharashtra, India</span>
+            </li>
+          </ul>
         </div>
 
         {/* Column 2 */}
